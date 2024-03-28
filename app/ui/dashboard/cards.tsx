@@ -5,7 +5,7 @@ import {
   InboxIcon,
 } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
-
+import { fetchCardData } from '@/app/lib/data';
 const iconMap = {
   collected: BanknotesIcon,
   customers: UserGroupIcon,
@@ -14,31 +14,59 @@ const iconMap = {
 };
 
 export default async function CardWrapper() {
+  const cardData = await fetchCardData();
+  const totalPaidInvoices = cardData.totalPaidInvoices;
+  const totalPendingInvoices = cardData.totalPendingInvoices;
+  const numberOfInvoices = cardData.numberOfInvoices;
+  const numberOfCustomers = cardData.numberOfCustomers;
   return (
+    
     <>
       {/* NOTE: comment in this code when you get to this point in the course */}
 
-      {/* <Card title="Collected" value={totalPaidInvoices} type="collected" />
+      <Card title="Collected" value={totalPaidInvoices} type="collected" />
       <Card title="Pending" value={totalPendingInvoices} type="pending" />
       <Card title="Total Invoices" value={numberOfInvoices} type="invoices" />
       <Card
         title="Total Customers"
         value={numberOfCustomers}
         type="customers"
-      /> */}
+      />
     </>
   );
 }
 
-export function Card({
+export async function Card({
   title,
-  value,
   type,
+  value,
 }: {
   title: string;
-  value: number | string;
+  value?: number | string;
   type: 'invoices' | 'customers' | 'pending' | 'collected';
 }) {
+  const cardData = await fetchCardData();
+  const totalPaidInvoices = cardData.totalPaidInvoices;
+  const totalPendingInvoices = cardData.totalPendingInvoices;
+  const numberOfInvoices = cardData.numberOfInvoices;
+  const numberOfCustomers = cardData.numberOfCustomers;
+  if(value === undefined) {
+  switch (type) {
+    case 'collected':
+      value = totalPaidInvoices;
+      break;
+    case 'pending':
+      value = totalPendingInvoices;
+      break;
+    case 'invoices':
+      value = numberOfInvoices;
+      break;
+    case 'customers':
+      value = numberOfCustomers;
+      break;
+
+  }
+}
   const Icon = iconMap[type];
 
   return (
